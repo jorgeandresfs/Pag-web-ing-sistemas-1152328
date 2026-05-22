@@ -1,0 +1,2339 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Campus Virtual · Ingeniería de Sistemas UFPS</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&family=Share+Tech+Mono&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --navy: #020B18;
+            --deep: #041428;
+            --blue-dark: #071E3D;
+            --blue-mid: #0A2D5A;
+            --blue: #0E3F7E;
+            --blue-bright: #1565C0;
+            --cyan: #00B4D8;
+            --cyan-glow: #00E5FF;
+            --steel: #1B3A6B;
+            --grid: rgba(0, 180, 216, 0.07);
+            --text: #C8DCF5;
+            --text-dim: #5A7FA8;
+            --white: #EAF3FF;
+            --accent: #FF6B35;
+            --gold: #F4A623;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--navy);
+            color: var(--text);
+            font-family: 'Rajdhani', sans-serif;
+            font-weight: 400;
+            overflow-x: hidden;
+        }
+
+        /* ─── GRID BACKGROUND ─── */
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image:
+                linear-gradient(var(--grid) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── SCANLINES ─── */
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: repeating-linear-gradient(0deg, transparent, transparent 2px,
+                    rgba(0, 0, 0, 0.03) 2px, rgba(0, 0, 0, 0.03) 4px);
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ─── NAV ─── */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(2, 11, 24, 0.92);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(0, 180, 216, 0.2);
+            padding: 0 3rem;
+            height: 68px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .nav-logo-icon {
+            width: 40px;
+            height: 40px;
+            border: 2px solid var(--cyan);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--cyan);
+            position: relative;
+            clip-path: polygon(10% 0%, 90% 0%, 100% 10%, 100% 90%, 90% 100%, 10% 100%, 0% 90%, 0% 10%);
+            background: rgba(0, 180, 216, 0.1);
+            animation: logoPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes logoPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 8px rgba(0, 180, 216, 0.4);
+            }
+
+            50% {
+                box-shadow: 0 0 20px rgba(0, 180, 216, 0.8), 0 0 40px rgba(0, 180, 216, 0.3);
+            }
+        }
+
+        .nav-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            color: var(--white);
+            text-transform: uppercase;
+            line-height: 1.3;
+        }
+
+        .nav-brand span {
+            display: block;
+            color: var(--cyan);
+            font-size: 9px;
+            letter-spacing: 4px;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            color: var(--text-dim);
+            text-decoration: none;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            border-radius: 2px;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--cyan);
+            background: rgba(0, 180, 216, 0.08);
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 14px;
+            right: 14px;
+            height: 1px;
+            background: var(--cyan);
+            transform: scaleX(0);
+            transition: transform 0.2s;
+        }
+
+        .nav-links a:hover::after {
+            transform: scaleX(1);
+        }
+
+        /* ─── HERO ─── */
+        #hero {
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 50% 50%, rgba(14, 63, 126, 0.4) 0%, transparent 70%),
+                radial-gradient(ellipse 40% 40% at 80% 20%, rgba(0, 180, 216, 0.15) 0%, transparent 60%),
+                radial-gradient(ellipse 30% 40% at 10% 80%, rgba(21, 101, 192, 0.2) 0%, transparent 60%);
+        }
+
+        .hero-circuit {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            opacity: 0.15;
+        }
+
+        .hero-circuit svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            max-width: 900px;
+            padding: 0 2rem;
+        }
+
+        .hero-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 18px;
+            border: 1px solid rgba(0, 180, 216, 0.4);
+            border-radius: 2px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin-bottom: 2rem;
+            background: rgba(0, 180, 216, 0.05);
+            animation: fadeSlideDown 0.8s ease both;
+        }
+
+        .hero-tag::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--cyan);
+            border-radius: 50%;
+            animation: blink 1.5s ease infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .hero-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.4rem, 6vw, 5rem);
+            font-weight: 900;
+            line-height: 1.05;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 1.5rem;
+            animation: fadeSlideDown 0.8s 0.2s ease both;
+        }
+
+        .hero-title .accent {
+            color: var(--cyan);
+        }
+
+        .hero-title .line2 {
+            display: block;
+            font-size: clamp(1.2rem, 3vw, 2rem);
+            font-weight: 400;
+            color: var(--text-dim);
+            letter-spacing: 6px;
+            margin-top: 0.3rem;
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--text-dim);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.7;
+            animation: fadeSlideDown 0.8s 0.4s ease both;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeSlideDown 0.8s 0.6s ease both;
+        }
+
+        .btn-primary {
+            padding: 14px 36px;
+            background: var(--cyan);
+            color: var(--navy);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--white);
+            transform: translateX(-100%);
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover::before {
+            transform: translateX(0);
+        }
+
+        .btn-primary:hover {
+            color: var(--navy);
+        }
+
+        .btn-primary span {
+            position: relative;
+            z-index: 1;
+        }
+
+        .btn-secondary {
+            padding: 14px 36px;
+            background: transparent;
+            color: var(--cyan);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid var(--cyan);
+            cursor: pointer;
+            clip-path: polygon(8px 0%, 100% 0%, calc(100% - 8px) 100%, 0% 100%);
+            transition: all 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(0, 180, 216, 0.1);
+            box-shadow: 0 0 20px rgba(0, 180, 216, 0.3);
+        }
+
+        .hero-scroll {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 3px;
+            animation: fadeSlideDown 1s 1s ease both;
+        }
+
+        .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--cyan), transparent);
+            animation: scrollLine 2s ease infinite;
+        }
+
+        @keyframes scrollLine {
+            0% {
+                transform: scaleY(0);
+                transform-origin: top;
+            }
+
+            50% {
+                transform: scaleY(1);
+                transform-origin: top;
+            }
+
+            51% {
+                transform: scaleY(1);
+                transform-origin: bottom;
+            }
+
+            100% {
+                transform: scaleY(0);
+                transform-origin: bottom;
+            }
+        }
+
+        /* ─── STATS BAR ─── */
+        .stats-bar {
+            position: relative;
+            z-index: 1;
+            background: rgba(4, 20, 40, 0.9);
+            border-top: 1px solid rgba(0, 180, 216, 0.15);
+            border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+            padding: 2rem 4rem;
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            line-height: 1;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            margin-top: 4px;
+            display: block;
+        }
+
+        /* ─── SECTION GENERIC ─── */
+        section {
+            position: relative;
+            z-index: 1;
+            padding: 6rem 4rem;
+        }
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-tag {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .section-tag::before {
+            content: '';
+            display: block;
+            width: 30px;
+            height: 1px;
+            background: var(--cyan);
+        }
+
+        .section-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 900;
+            color: var(--white);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .section-title .accent {
+            color: var(--cyan);
+        }
+
+        /* ─── CAMPUS EXPLORER / MAP ─── */
+        #explorer {
+            background: var(--deep);
+        }
+
+        .campus-map-container {
+            position: relative;
+            background: rgba(7, 30, 61, 0.6);
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            border-radius: 4px;
+            overflow: hidden;
+            min-height: 520px;
+            display: flex;
+        }
+
+        .campus-sidebar {
+            width: 280px;
+            flex-shrink: 0;
+            background: rgba(2, 11, 24, 0.8);
+            border-right: 1px solid rgba(0, 180, 216, 0.15);
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .campus-sidebar-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+        }
+
+        .campus-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 14px;
+            background: transparent;
+            border: 1px solid rgba(0, 180, 216, 0.1);
+            color: var(--text-dim);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-align: left;
+            border-radius: 2px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .campus-btn::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--cyan);
+            transform: scaleY(0);
+            transition: transform 0.2s;
+        }
+
+        .campus-btn:hover,
+        .campus-btn.active {
+            color: var(--white);
+            border-color: rgba(0, 180, 216, 0.4);
+            background: rgba(0, 180, 216, 0.07);
+        }
+
+        .campus-btn:hover::before,
+        .campus-btn.active::before {
+            transform: scaleY(1);
+        }
+
+        .campus-btn .icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 180, 216, 0.1);
+            border-radius: 2px;
+            font-size: 16px;
+            flex-shrink: 0;
+            transition: background 0.2s;
+        }
+
+        .campus-btn:hover .icon,
+        .campus-btn.active .icon {
+            background: rgba(0, 180, 216, 0.2);
+        }
+
+        .campus-display {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .campus-panel {
+            position: absolute;
+            inset: 0;
+            display: none;
+            flex-direction: column;
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        .campus-panel.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .campus-panel-hero {
+            height: 260px;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .campus-panel-bg {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 8rem;
+            opacity: 0.1;
+        }
+
+        .campus-panel-gradient {
+            position: absolute;
+            inset: 0;
+        }
+
+        .campus-panel-label {
+            position: absolute;
+            top: 1.5rem;
+            left: 1.5rem;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            background: rgba(2, 11, 24, 0.8);
+            padding: 4px 10px;
+            border: 1px solid rgba(0, 180, 216, 0.3);
+        }
+
+
+
+
+
+        .campus-panel-content {
+            flex: 1;
+            padding: 1.5rem 2rem;
+            overflow-y: auto;
+        }
+
+        .campus-panel-content h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.8rem;
+        }
+
+        .campus-panel-content p {
+            font-size: 0.95rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .feature-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 1.2rem;
+        }
+
+        .feature-tag {
+            padding: 4px 12px;
+            background: rgba(0, 180, 216, 0.08);
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 1px;
+            border-radius: 2px;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+        /* ─── LABS GRID ─── */
+        #laboratorios {
+            background: var(--navy);
+        }
+
+        .labs-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .lab-card {
+            background: rgba(7, 30, 61, 0.5);
+            border: 1px solid rgba(0, 180, 216, 0.12);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .lab-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+            transform: scaleX(0);
+            transition: transform 0.4s;
+        }
+
+        .lab-card:hover {
+            border-color: rgba(0, 180, 216, 0.35);
+            transform: translateY(-3px);
+        }
+
+        .lab-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .lab-card-num {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: rgba(0, 180, 216, 0.4);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+        }
+
+        .lab-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .lab-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.6rem;
+            letter-spacing: 0.5px;
+        }
+
+        .lab-card p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .lab-capacity {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+        }
+
+        .capacity-bar {
+            flex: 1;
+            height: 3px;
+            background: rgba(0, 180, 216, 0.15);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .capacity-fill {
+            height: 100%;
+            background: var(--cyan);
+            border-radius: 2px;
+            transition: width 1s ease;
+        }
+
+        /* ─── PROYECTOS ─── */
+        #proyectos {
+            background: rgba(4, 20, 40, 0.8);
+        }
+
+        .projects-timeline {
+            position: relative;
+            padding-left: 2rem;
+        }
+
+        .projects-timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 1px;
+            background: linear-gradient(to bottom, var(--cyan), rgba(0, 180, 216, 0.1));
+        }
+
+        .project-item {
+            position: relative;
+            margin-bottom: 2.5rem;
+            padding-left: 2rem;
+        }
+
+        .project-item::before {
+            content: '';
+            position: absolute;
+            left: -5px;
+            top: 12px;
+            width: 11px;
+            height: 11px;
+            background: var(--cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--cyan);
+        }
+
+        .project-card {
+            background: rgba(7, 30, 61, 0.5);
+            border: 1px solid rgba(0, 180, 216, 0.12);
+            padding: 1.5rem 2rem;
+            transition: all 0.3s;
+        }
+
+        .project-card:hover {
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(7, 30, 61, 0.8);
+        }
+
+        .project-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .project-year {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .project-status {
+            padding: 3px 10px;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            border-radius: 2px;
+        }
+
+        .status-active {
+            background: rgba(0, 180, 216, 0.15);
+            border: 1px solid rgba(0, 180, 216, 0.4);
+            color: var(--cyan);
+        }
+
+        .status-complete {
+            background: rgba(0, 200, 100, 0.1);
+            border: 1px solid rgba(0, 200, 100, 0.3);
+            color: #4CAF50;
+        }
+
+        .project-card h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.5rem;
+        }
+
+        .project-card p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+        }
+
+        .project-tags {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .ptag {
+            padding: 2px 8px;
+            background: rgba(21, 101, 192, 0.2);
+            border: 1px solid rgba(21, 101, 192, 0.4);
+            font-size: 11px;
+            color: var(--text-dim);
+            letter-spacing: 0.5px;
+        }
+
+        /* ─── EVENTOS ─── */
+        #eventos {
+            background: var(--navy);
+        }
+
+        .events-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .event-card {
+            background: rgba(7, 30, 61, 0.4);
+            border: 1px solid rgba(0, 180, 216, 0.12);
+            display: flex;
+            overflow: hidden;
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .event-card:hover {
+            border-color: rgba(0, 180, 216, 0.35);
+        }
+
+        .event-date-block {
+            width: 80px;
+            flex-shrink: 0;
+            background: linear-gradient(180deg, var(--blue-mid), var(--blue-dark));
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem 0.5rem;
+            border-right: 1px solid rgba(0, 180, 216, 0.15);
+            text-align: center;
+        }
+
+        .event-day {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 900;
+            color: var(--cyan);
+            line-height: 1;
+        }
+
+        .event-month {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 4px;
+        }
+
+        .event-body {
+            padding: 1.2rem 1.5rem;
+            flex: 1;
+        }
+
+        .event-type {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .event-body h3 {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
+        }
+
+        .event-body p {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.5;
+        }
+
+        .event-loc {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-top: 0.7rem;
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+        }
+
+        .event-card.featured {
+            grid-column: 1 / -1;
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(14, 63, 126, 0.2);
+        }
+
+        .event-card.featured .event-date-block {
+            width: 100px;
+            background: linear-gradient(180deg, var(--blue), var(--blue-mid));
+        }
+
+        .event-card.featured .event-day {
+            font-size: 2.5rem;
+        }
+
+        /* ─── SEMILLEROS ─── */
+        #semilleros {
+            background: rgba(4, 20, 40, 0.8);
+        }
+
+        .semilleros-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .semillero-card {
+            background: rgba(7, 30, 61, 0.4);
+            border: 1px solid rgba(0, 180, 216, 0.12);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+
+        .semillero-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: radial-gradient(circle at bottom right, rgba(0, 180, 216, 0.08), transparent);
+            pointer-events: none;
+        }
+
+        .semillero-card:hover {
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(7, 30, 61, 0.7);
+            transform: translateY(-4px);
+        }
+
+        .semillero-num {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            color: rgba(0, 180, 216, 0.08);
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .semillero-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .semillero-card h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--white);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 0.8rem;
+        }
+
+        .semillero-card p {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .semillero-members {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        /* ─── SALONES ─── */
+        #salones {
+            background: var(--navy);
+        }
+
+        .salones-flex {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        .salones-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .salon-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 18px;
+            background: rgba(7, 30, 61, 0.4);
+            border: 1px solid rgba(0, 180, 216, 0.1);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .salon-item:hover,
+        .salon-item.active {
+            border-color: rgba(0, 180, 216, 0.35);
+            background: rgba(14, 63, 126, 0.2);
+        }
+
+        .salon-info {
+            flex: 1;
+        }
+
+        .salon-name {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--white);
+        }
+
+        .salon-floor {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            margin-top: 2px;
+        }
+
+        .salon-cap {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--cyan);
+            margin-left: 1rem;
+            white-space: nowrap;
+            font-size: 0.85rem;
+        }
+
+        .salon-detail {
+            background: rgba(7, 30, 61, 0.5);
+            border: 1px solid rgba(0, 180, 216, 0.2);
+            padding: 2rem;
+            height: 100%;
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .salon-detail-header {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            margin-bottom: 1rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(0, 180, 216, 0.15);
+        }
+
+        .salon-detail h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.1rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+
+        .salon-specs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .spec-box {
+            background: rgba(0, 180, 216, 0.05);
+            border: 1px solid rgba(0, 180, 216, 0.1);
+            padding: 12px 16px;
+        }
+
+        .spec-label {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 9px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .spec-value {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .salon-amenities {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: auto;
+        }
+
+        .amenity {
+            padding: 4px 10px;
+            background: rgba(0, 180, 216, 0.06);
+            border: 1px solid rgba(0, 180, 216, 0.15);
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: 'Share Tech Mono', monospace;
+            letter-spacing: 1px;
+        }
+
+        /* ─── EXPERIENCIAS ─── */
+        #experiencias {
+            background: rgba(4, 20, 40, 0.8);
+        }
+
+        .exp-masonry {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-template-rows: auto;
+            gap: 1rem;
+        }
+
+        .exp-card {
+            background: rgba(7, 30, 61, 0.5);
+            border: 1px solid rgba(0, 180, 216, 0.1);
+            padding: 1.8rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .exp-card:nth-child(1) {
+            grid-row: span 2;
+        }
+
+        .exp-card:nth-child(4) {
+            grid-column: span 2;
+        }
+
+        .exp-card:hover {
+            border-color: rgba(0, 180, 216, 0.3);
+            background: rgba(7, 30, 61, 0.8);
+        }
+
+        .exp-avatar {
+            width: 48px;
+            height: 48px;
+            background: linear-gradient(135deg, var(--blue), var(--blue-bright));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 900;
+            color: var(--white);
+            margin-bottom: 1rem;
+            border: 2px solid rgba(0, 180, 216, 0.3);
+        }
+
+        .exp-quote {
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 1.2rem;
+            font-style: italic;
+        }
+
+        .exp-quote::before {
+            content: '"';
+            color: var(--cyan);
+            font-size: 1.5rem;
+            line-height: 0;
+            vertical-align: -0.4rem;
+        }
+
+        .exp-quote::after {
+            content: '"';
+            color: var(--cyan);
+            font-size: 1.5rem;
+            line-height: 0;
+            vertical-align: -0.4rem;
+        }
+
+        .exp-author {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 11px;
+            color: var(--cyan);
+            letter-spacing: 2px;
+        }
+
+        .exp-semester {
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 1px;
+            margin-top: 2px;
+        }
+
+        /* ─── FOOTER ─── */
+        footer {
+            position: relative;
+            z-index: 1;
+            background: var(--deep);
+            border-top: 1px solid rgba(0, 180, 216, 0.15);
+            padding: 3rem 4rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .footer-brand {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--white);
+            margin-bottom: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        .footer-sub {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            line-height: 1.7;
+        }
+
+        .footer-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--cyan);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .footer-links a {
+            color: var(--text-dim);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .footer-links a::before {
+            content: '›';
+            color: var(--cyan);
+            font-size: 1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--white);
+        }
+
+        .footer-bottom {
+            grid-column: 1 / -1;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 180, 216, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 10px;
+            color: var(--text-dim);
+            letter-spacing: 2px;
+        }
+
+        /* ─── ANIMATIONS ─── */
+        @keyframes fadeSlideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ─── SCROLLBAR ─── */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--navy);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--blue-mid);
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--cyan);
+        }
+
+        /* ─── RESPONSIVE ─── */
+        @media (max-width: 900px) {
+            nav {
+                padding: 0 1.5rem;
+            }
+
+            .nav-links {
+                display: none;
+            }
+
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .events-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .semilleros-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .salones-flex {
+                grid-template-columns: 1fr;
+            }
+
+            .exp-masonry {
+                grid-template-columns: 1fr;
+            }
+
+            .exp-card:nth-child(1),
+            .exp-card:nth-child(4) {
+                grid-row: auto;
+                grid-column: auto;
+            }
+
+            footer {
+                grid-template-columns: 1fr;
+                padding: 2rem 1.5rem;
+            }
+
+            .footer-bottom {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+
+            .campus-map-container {
+                flex-direction: column;
+            }
+
+            .campus-sidebar {
+                width: 100%;
+            }
+
+            .stats-bar {
+                padding: 1.5rem;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .semilleros-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero-title {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">
+            <div class="nav-logo-icon">IS</div>
+            <div class="nav-brand">
+                UFPS Campus
+                <span>Ingeniería de Sistemas</span>
+            </div>
+        </div>
+        <ul class="nav-links">
+            <a href="#explorer">Campus</a>
+            <a href="#laboratorios">Labs</a>
+            <a href="#proyectos">Proyectos</a>
+            <a href="#eventos">Eventos</a>
+            <a href="#semilleros">Semilleros</a>
+            <a href="#salones">Salones</a>
+            <a href="#experiencias">Experiencias</a>
+
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section id="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-circuit">
+            <svg viewBox="0 0 1400 700" preserveAspectRatio="xMidYMid slice">
+                <g stroke="rgba(0,180,216,0.3)" stroke-width="1" fill="none">
+                    <path
+                        d="M0,350 L200,350 L200,200 L400,200 L400,300 L600,300 L600,150 L900,150 L900,350 L1100,350 L1100,250 L1400,250" />
+                    <path
+                        d="M0,500 L100,500 L100,400 L300,400 L300,500 L500,500 L500,350 L700,350 L700,500 L900,500 L900,400 L1200,400 L1200,500 L1400,500" />
+                    <circle cx="200" cy="350" r="5" fill="rgba(0,180,216,0.6)" />
+                    <circle cx="400" cy="200" r="5" fill="rgba(0,180,216,0.6)" />
+                    <circle cx="600" cy="300" r="5" fill="rgba(0,180,216,0.6)" />
+                    <circle cx="900" cy="150" r="5" fill="rgba(0,180,216,0.6)" />
+                    <circle cx="1100" cy="350" r="5" fill="rgba(0,180,216,0.6)" />
+                    <rect x="180" y="175" width="40" height="20" rx="2" fill="rgba(0,180,216,0.15)"
+                        stroke="rgba(0,180,216,0.4)" />
+                    <rect x="580" y="125" width="40" height="20" rx="2" fill="rgba(0,180,216,0.15)"
+                        stroke="rgba(0,180,216,0.4)" />
+                    <rect x="880" y="125" width="40" height="20" rx="2" fill="rgba(0,180,216,0.15)"
+                        stroke="rgba(0,180,216,0.4)" />
+                    <line x1="600" y1="0" x2="600" y2="700" stroke-dasharray="10,20" stroke="rgba(0,180,216,0.1)" />
+                    <line x1="900" y1="0" x2="900" y2="700" stroke-dasharray="10,20" stroke="rgba(0,180,216,0.1)" />
+                </g>
+            </svg>
+        </div>
+
+        <div class="hero-content">
+            <div class="hero-tag">SISTEMA_ACTIVO · UFPS · 2025</div>
+            <h1 class="hero-title">
+                <span class="accent">Explora</span> el Campus
+                <span class="line2">Ingeniería de Sistemas</span>
+            </h1>
+            <p class="hero-desc">
+                Recorre virtualmente nuestra facultad: laboratorios de última generación, semilleros de investigación,
+                eventos tecnológicos y los espacios donde se forman los ingenieros del futuro.
+            </p>
+            <div class="hero-cta">
+                <a href="#explorer" class="btn-primary"><span>Iniciar Recorrido</span></a>
+                <a href="#laboratorios" class="btn-secondary">Ver Laboratorios</a>
+            </div>
+        </div>
+
+        <div class="hero-scroll">
+            <div class="scroll-line"></div>
+            SCROLL
+        </div>
+    </section>
+
+    <!-- STATS BAR -->
+    <div class="stats-bar">
+        <div class="stat-item">
+            <span class="stat-num">8+</span>
+            <span class="stat-label">Laboratorios</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">12</span>
+            <span class="stat-label">Semilleros Activos</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">40+</span>
+            <span class="stat-label">Proyectos I+D</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">600+</span>
+            <span class="stat-label">Estudiantes</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">30</span>
+            <span class="stat-label">Años de Trayectoria</span>
+        </div>
+    </div>
+
+    <!-- EXPLORER INTERACTIVO -->
+    <section id="explorer">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_01</div>
+            <h2 class="section-title">Explora el <span class="accent">Campus</span></h2>
+        </div>
+
+        <div class="campus-map-container reveal">
+            <!-- SIDEBAR -->
+            <div class="campus-sidebar">
+                <div class="campus-sidebar-title">// ZONAS DEL CAMPUS</div>
+                <button class="campus-btn active" onclick="showPanel('labs')">
+                    <span class="icon">🔬</span> Laboratorios
+                </button>
+                <button class="campus-btn" onclick="showPanel('proyectos')">
+                    <span class="icon">💡</span> Proyectos
+                </button>
+                <button class="campus-btn" onclick="showPanel('eventos')">
+                    <span class="icon">📡</span> Eventos Tech
+                </button>
+                <button class="campus-btn" onclick="showPanel('semilleros')">
+                    <span class="icon">🌱</span> Semilleros
+                </button>
+                <button class="campus-btn" onclick="showPanel('salones')">
+                    <span class="icon">🏛️</span> Salones
+                </button>
+                <button class="campus-btn" onclick="showPanel('experiencias')">
+                    <span class="icon">⭐</span> Experiencias
+                </button>
+            </div>
+
+            <!-- DISPLAY PANELS -->
+            <div class="campus-display">
+
+                <!-- LABS PANEL -->
+                <div class="campus-panel active" id="panel-labs">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">🔬</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(14,63,126,0.9), rgba(0,180,216,0.2))"></div>
+                        <div class="campus-panel-label">ZONA · LABORATORIOS</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Laboratorios de Ingeniería de Sistemas</h3>
+                        <p>Espacios equipados con tecnología de punta para el desarrollo de habilidades prácticas en
+                            redes, programación, bases de datos, inteligencia artificial y más.</p>
+                        <div class="feature-list">
+                            <span class="feature-tag">CISCO Networking</span>
+                            <span class="feature-tag">Servidores Linux</span>
+                            <span class="feature-tag">IoT Workstations</span>
+                            <span class="feature-tag">Realidad Virtual</span>
+                            <span class="feature-tag">Ciberseguridad</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- PROYECTOS PANEL -->
+                <div class="campus-panel" id="panel-proyectos">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">💡</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(7,30,61,0.9), rgba(21,101,192,0.3))"></div>
+                        <div class="campus-panel-label">ZONA · PROYECTOS I+D</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Centro de Proyectos e Innovación</h3>
+                        <p>Espacio colaborativo donde estudiantes y docentes desarrollan soluciones tecnológicas con
+                            impacto regional y nacional, integrando investigación formativa con el sector productivo.
+                        </p>
+                        <div class="feature-list">
+                            <span class="feature-tag">App Development</span>
+                            <span class="feature-tag">Machine Learning</span>
+                            <span class="feature-tag">Blockchain</span>
+                            <span class="feature-tag">Smart Cities</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EVENTOS PANEL -->
+                <div class="campus-panel" id="panel-eventos">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">📡</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(4,20,40,0.95), rgba(0,180,216,0.25))"></div>
+                        <div class="campus-panel-label">ZONA · EVENTOS TECNOLÓGICOS</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Auditorio & Salas de Eventos</h3>
+                        <p>Escenarios para hackathons, conferencias, charlas magistrales y ferias de innovación que
+                            conectan a nuestra comunidad con la industria tecnológica nacional e internacional.</p>
+                        <div class="feature-list">
+                            <span class="feature-tag">Hackathons</span>
+                            <span class="feature-tag">Tech Talks</span>
+                            <span class="feature-tag">Ferias de Software</span>
+                            <span class="feature-tag">Competencias ACM</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SEMILLEROS PANEL -->
+                <div class="campus-panel" id="panel-semilleros">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">🌱</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(2,40,20,0.8), rgba(0,100,60,0.2))"></div>
+                        <div class="campus-panel-label">ZONA · SEMILLEROS DE INVESTIGACIÓN</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Semilleros de Investigación Activos</h3>
+                        <p>Grupos de investigación formativa donde estudiantes desde primer semestre pueden participar
+                            en proyectos científicos bajo la mentoría de docentes investigadores.</p>
+                        <div class="feature-list">
+                            <span class="feature-tag">IA & Data Science</span>
+                            <span class="feature-tag">Ciberseguridad</span>
+                            <span class="feature-tag">Robótica</span>
+                            <span class="feature-tag">Software Libre</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SALONES PANEL -->
+                <div class="campus-panel" id="panel-salones">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">🏛️</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(7,30,61,0.95), rgba(14,63,126,0.3))"></div>
+                        <div class="campus-panel-label">ZONA · SALONES DE CLASE</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Espacios Académicos</h3>
+                        <p>Salones modernos con proyectores, tableros digitales y conectividad completa para el
+                            desarrollo de clases teóricas y prácticas del programa de Ingeniería de Sistemas.</p>
+                        <div class="feature-list">
+                            <span class="feature-tag">Proyección 4K</span>
+                            <span class="feature-tag">WiFi 6</span>
+                            <span class="feature-tag">Climatización</span>
+                            <span class="feature-tag">Capacidad 40 Est.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- EXPERIENCIAS PANEL -->
+                <div class="campus-panel" id="panel-experiencias">
+                    <div class="campus-panel-hero">
+                        <div class="campus-panel-bg">⭐</div>
+                        <div class="campus-panel-gradient"
+                            style="background: linear-gradient(135deg, rgba(40,20,0,0.8), rgba(180,120,0,0.2))"></div>
+                        <div class="campus-panel-label">ZONA · EXPERIENCIAS ESTUDIANTILES</div>
+                    </div>
+                    <div class="campus-panel-content">
+                        <h3>Voz de Nuestros Ingenieros</h3>
+                        <p>Conoce de primera mano lo que viven nuestros estudiantes: desde el primer día en el campus
+                            hasta la culminación de proyectos de grado que cambian vidas.</p>
+                        <div class="feature-list">
+                            <span class="feature-tag">Testimonios Reales</span>
+                            <span class="feature-tag">Vida Campus</span>
+                            <span class="feature-tag">Egresados Exitosos</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- LABORATORIOS -->
+    <section id="laboratorios">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_02</div>
+            <h2 class="section-title">Nuestros <span class="accent">Laboratorios</span></h2>
+        </div>
+        <div class="labs-grid">
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_001</div>
+                <span class="lab-card-icon">🌐</span>
+                <h3>Laboratorio de Redes y Telecomunicaciones</h3>
+                <p>Equipado con routers y switches Cisco, racks de servidores, analizadores de protocolos y plataformas
+                    de simulación para el diseño de arquitecturas de red.</p>
+                <div class="lab-capacity">
+                    <span>30 PCs</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:75%"></div>
+                    </div>
+                    <span>75%</span>
+                </div>
+            </div>
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_002</div>
+                <span class="lab-card-icon">💾</span>
+                <h3>Laboratorio de Bases de Datos</h3>
+                <p>Servidores Oracle, PostgreSQL, MongoDB y MySQL para prácticas de modelado, consulta, optimización y
+                    administración de sistemas de información.</p>
+                <div class="lab-capacity">
+                    <span>25 PCs</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:60%"></div>
+                    </div>
+                    <span>60%</span>
+                </div>
+            </div>
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_003</div>
+                <span class="lab-card-icon">🤖</span>
+                <h3>Laboratorio de IA y Machine Learning</h3>
+                <p>GPUs NVIDIA dedicadas, frameworks TensorFlow y PyTorch preinstalados, datasets académicos y ambiente
+                    Jupyter para proyectos de inteligencia artificial aplicada.</p>
+                <div class="lab-capacity">
+                    <span>20 WS</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:90%"></div>
+                    </div>
+                    <span>90%</span>
+                </div>
+            </div>
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_004</div>
+                <span class="lab-card-icon">🔐</span>
+                <h3>Laboratorio de Ciberseguridad</h3>
+                <p>Entorno controlado para pentesting, análisis forense digital, ethical hacking y respuesta a
+                    incidentes con herramientas como Kali Linux y Wireshark.</p>
+                <div class="lab-capacity">
+                    <span>20 PCs</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:55%"></div>
+                    </div>
+                    <span>55%</span>
+                </div>
+            </div>
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_005</div>
+                <span class="lab-card-icon">📱</span>
+                <h3>Laboratorio de Desarrollo Móvil</h3>
+                <p>Dispositivos Android e iOS para pruebas, estaciones de trabajo con Android Studio y Xcode, y acceso a
+                    emuladores de alta fidelidad para desarrollo multiplataforma.</p>
+                <div class="lab-capacity">
+                    <span>28 PCs</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:80%"></div>
+                    </div>
+                    <span>80%</span>
+                </div>
+            </div>
+            <div class="lab-card reveal">
+                <div class="lab-card-num">// LAB_006</div>
+                <span class="lab-card-icon">🏭</span>
+                <h3>Laboratorio de IoT y Robótica</h3>
+                <p>Kits Arduino, Raspberry Pi, sensores industriales, brazos robóticos educativos y plataformas de
+                    prototipado rápido para sistemas embebidos e IoT industrial.</p>
+                <div class="lab-capacity">
+                    <span>18 Kit</span>
+                    <div class="capacity-bar">
+                        <div class="capacity-fill" style="width:70%"></div>
+                    </div>
+                    <span>70%</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- PROYECTOS -->
+    <section id="proyectos">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_03</div>
+            <h2 class="section-title">Proyectos de <span class="accent">Investigación</span></h2>
+        </div>
+        <div class="projects-timeline reveal">
+
+            <div class="project-item">
+                <div class="project-card">
+                    <div class="project-meta">
+                        <span class="project-year">2025</span>
+                        <span class="project-status status-active">● ACTIVO</span>
+                    </div>
+                    <h3>Sistema de Monitoreo Inteligente para Cultivos de la Región</h3>
+                    <p>Aplicación de IoT y machine learning para optimizar el riego, detectar plagas y mejorar los
+                        rendimientos agrícolas en el departamento de Norte de Santander.</p>
+                    <div class="project-tags">
+                        <span class="ptag">IoT</span><span class="ptag">Machine Learning</span><span
+                            class="ptag">Agro-Tech</span><span class="ptag">Python</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-card">
+                    <div class="project-meta">
+                        <span class="project-year">2025</span>
+                        <span class="project-status status-active">● ACTIVO</span>
+                    </div>
+                    <h3>Plataforma de Telemedicina para Zonas Rurales de Frontera</h3>
+                    <p>Sistema web y móvil que conecta a pacientes en áreas remotas con profesionales de salud mediante
+                        teleconsulta, expediente digital y alertas tempranas.</p>
+                    <div class="project-tags">
+                        <span class="ptag">eSalud</span><span class="ptag">React Native</span><span
+                            class="ptag">WebRTC</span><span class="ptag">Cloud</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-card">
+                    <div class="project-meta">
+                        <span class="project-year">2024</span>
+                        <span class="project-status status-complete">✓ FINALIZADO</span>
+                    </div>
+                    <h3>Sistema de Gestión Académica Adaptativa con IA</h3>
+                    <p>Plataforma que personaliza rutas de aprendizaje usando algoritmos de recomendación, análisis de
+                        rendimiento académico y modelos predictivos de deserción estudiantil.</p>
+                    <div class="project-tags">
+                        <span class="ptag">EdTech</span><span class="ptag">NLP</span><span
+                            class="ptag">Recomendación</span><span class="ptag">Django</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-card">
+                    <div class="project-meta">
+                        <span class="project-year">2024</span>
+                        <span class="project-status status-complete">✓ FINALIZADO</span>
+                    </div>
+                    <h3>Red de Sensores para Monitoreo de Calidad del Aire en Cúcuta</h3>
+                    <p>Despliegue de 15 nodos de medición en la ciudad con dashboard en tiempo real, reportes
+                        automáticos y alertas por niveles críticos de contaminación.</p>
+                    <div class="project-tags">
+                        <span class="ptag">Smart City</span><span class="ptag">ESP32</span><span
+                            class="ptag">MQTT</span><span class="ptag">Dashboard</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="project-item">
+                <div class="project-card">
+                    <div class="project-meta">
+                        <span class="project-year">2025</span>
+                        <span class="project-status status-active">● ACTIVO</span>
+                    </div>
+                    <h3>Blockchain para Trazabilidad de Cadena de Suministro Regional</h3>
+                    <p>Implementación de contratos inteligentes para garantizar la transparencia y autenticidad en la
+                        cadena logística de productos de la zona de frontera.</p>
+                    <div class="project-tags">
+                        <span class="ptag">Ethereum</span><span class="ptag">Solidity</span><span
+                            class="ptag">Web3</span><span class="ptag">Logística</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- EVENTOS -->
+    <section id="eventos">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_04</div>
+            <h2 class="section-title">Eventos <span class="accent">Tecnológicos</span></h2>
+        </div>
+        <div class="events-grid reveal">
+
+            <div class="event-card featured">
+                <div class="event-date-block">
+                    <span class="event-day">15</span>
+                    <span class="event-month">AGO 2025</span>
+                </div>
+                <div class="event-body">
+                    <div class="event-type">HACKATHON PRINCIPAL</div>
+                    <h3>HackUFPS 2025 — Norte de Santander Digital</h3>
+                    <p>48 horas de innovación no-stop para desarrollar soluciones tecnológicas a los retos del
+                        departamento. Premio en efectivo, mentoría y pasantías con empresas aliadas. Equipos de 3 a 5
+                        estudiantes de cualquier carrera.</p>
+                    <div class="event-loc">📍 Campus Central UFPS · Auditorio Principal + Laboratorios</div>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-date-block">
+                    <span class="event-day">22</span>
+                    <span class="event-month">MAY 2025</span>
+                </div>
+                <div class="event-body">
+                    <div class="event-type">CHARLA MAGISTRAL</div>
+                    <h3>IA Generativa en la Industria del Software</h3>
+                    <p>Conferencia con expertos de Google Colombia y startups locales sobre el impacto de los LLMs en el
+                        desarrollo profesional.</p>
+                    <div class="event-loc">📍 Auditorio Bloque C</div>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-date-block">
+                    <span class="event-day">07</span>
+                    <span class="event-month">JUN 2025</span>
+                </div>
+                <div class="event-body">
+                    <div class="event-type">COMPETENCIA</div>
+                    <h3>Copa de Programación ACM-ICPC Interna</h3>
+                    <p>Clasificatoria interna para la competencia latinoamericana de programación competitiva.
+                        Categorías junior y senior con énfasis en algoritmos y estructuras de datos.</p>
+                    <div class="event-loc">📍 Lab. Redes — Piso 2</div>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-date-block">
+                    <span class="event-day">18</span>
+                    <span class="event-month">JUL 2025</span>
+                </div>
+                <div class="event-body">
+                    <div class="event-type">FERIA</div>
+                    <h3>Expo Sistemas — Feria de Proyectos de Grado</h3>
+                    <p>Exhibición pública de los mejores proyectos de grado del semestre con participación de empresas
+                        del sector para reclutamiento.</p>
+                    <div class="event-loc">📍 Plazoleta Central UFPS</div>
+                </div>
+            </div>
+
+            <div class="event-card">
+                <div class="event-date-block">
+                    <span class="event-day">03</span>
+                    <span class="event-month">SEP 2025</span>
+                </div>
+                <div class="event-body">
+                    <div class="event-type">WORKSHOP</div>
+                    <h3>Taller Intensivo: Ciberseguridad Ofensiva</h3>
+                    <p>Workshop práctico de 8 horas sobre ethical hacking, OSINT y respuesta a incidentes con
+                        certificación de participación.</p>
+                    <div class="event-loc">📍 Lab. Ciberseguridad</div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SEMILLEROS -->
+    <section id="semilleros">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_05</div>
+            <h2 class="section-title">Semilleros de <span class="accent">Investigación</span></h2>
+        </div>
+        <div class="semilleros-grid">
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">01</div>
+                <div class="semillero-icon">🧠</div>
+                <h3>SIRIUS — IA & Data Science</h3>
+                <p>Investigación en inteligencia artificial, machine learning profundo, visión por computador y
+                    procesamiento de lenguaje natural aplicados a problemas regionales.</p>
+                <div class="semillero-members">▲ 22 MIEMBROS ACTIVOS</div>
+            </div>
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">02</div>
+                <div class="semillero-icon">🛡️</div>
+                <h3>CIPHER — Ciberseguridad</h3>
+                <p>Análisis de vulnerabilidades, seguridad en redes, forense digital y desarrollo de soluciones para la
+                    protección de infraestructura crítica.</p>
+                <div class="semillero-members">▲ 15 MIEMBROS ACTIVOS</div>
+            </div>
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">03</div>
+                <div class="semillero-icon">⚙️</div>
+                <h3>NEXUS — IoT & Sistemas Embebidos</h3>
+                <p>Diseño de sistemas ciberfísicos, automatización inteligente, industria 4.0 y aplicaciones de robótica
+                    colaborativa para el sector productivo.</p>
+                <div class="semillero-members">▲ 18 MIEMBROS ACTIVOS</div>
+            </div>
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">04</div>
+                <div class="semillero-icon">🌐</div>
+                <h3>WEBDEV — Desarrollo Web Avanzado</h3>
+                <p>Tecnologías frontend y backend modernas, arquitecturas serverless, DevOps, microservicios y
+                    experiencias de usuario centradas en accesibilidad.</p>
+                <div class="semillero-members">▲ 25 MIEMBROS ACTIVOS</div>
+            </div>
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">05</div>
+                <div class="semillero-icon">📊</div>
+                <h3>DATALAB — Big Data & Analytics</h3>
+                <p>Procesamiento masivo de datos con Hadoop y Spark, visualización analítica, minería de datos y
+                    sistemas de soporte a decisiones para organizaciones públicas.</p>
+                <div class="semillero-members">▲ 12 MIEMBROS ACTIVOS</div>
+            </div>
+
+            <div class="semillero-card reveal">
+                <div class="semillero-num">06</div>
+                <div class="semillero-icon">🆓</div>
+                <h3>LIBRES — Software y Cultura Libre</h3>
+                <p>Contribución a proyectos open source, desarrollo de herramientas educativas gratuitas, defensa de la
+                    privacidad digital y comunidades de conocimiento abierto.</p>
+                <div class="semillero-members">▲ 20 MIEMBROS ACTIVOS</div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- SALONES -->
+    <section id="salones">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_06</div>
+            <h2 class="section-title">Salones y <span class="accent">Espacios</span></h2>
+        </div>
+
+        <div class="salones-flex reveal">
+            <div class="salones-list">
+                <div class="salon-item active" onclick="selectSalon(this, 'S101')">
+                    <div class="salon-info">
+                        <div class="salon-name">Salón 101 — Bloque A</div>
+                        <div class="salon-floor">PISO 1 · TEORÍA</div>
+                    </div>
+                    <div class="salon-cap">40 est.</div>
+                </div>
+                <div class="salon-item" onclick="selectSalon(this, 'S102')">
+                    <div class="salon-info">
+                        <div class="salon-name">Salón 102 — Bloque A</div>
+                        <div class="salon-floor">PISO 1 · TEORÍA</div>
+                    </div>
+                    <div class="salon-cap">35 est.</div>
+                </div>
+                <div class="salon-item" onclick="selectSalon(this, 'S201')">
+                    <div class="salon-info">
+                        <div class="salon-name">Salón 201 — Bloque B</div>
+                        <div class="salon-floor">PISO 2 · SEMINARIO</div>
+                    </div>
+                    <div class="salon-cap">25 est.</div>
+                </div>
+                <div class="salon-item" onclick="selectSalon(this, 'S202')">
+                    <div class="salon-info">
+                        <div class="salon-name">Salón 202 — Bloque B</div>
+                        <div class="salon-floor">PISO 2 · SEMINARIO</div>
+                    </div>
+                    <div class="salon-cap">25 est.</div>
+                </div>
+                <div class="salon-item" onclick="selectSalon(this, 'AUD')">
+                    <div class="salon-info">
+                        <div class="salon-name">Auditorio Principal</div>
+                        <div class="salon-floor">PLANTA BAJA · EVENTOS</div>
+                    </div>
+                    <div class="salon-cap">200 est.</div>
+                </div>
+                <div class="salon-item" onclick="selectSalon(this, 'SAL')">
+                    <div class="salon-info">
+                        <div class="salon-name">Sala de Profesores</div>
+                        <div class="salon-floor">PISO 3 · DOCENTES</div>
+                    </div>
+                    <div class="salon-cap">Privado</div>
+                </div>
+            </div>
+
+            <div class="salon-detail" id="salon-detail">
+                <div class="salon-detail-header">// DETALLE DEL ESPACIO SELECCIONADO</div>
+                <h3 id="sd-name">Salón 101 — Bloque A</h3>
+                <div class="salon-specs">
+                    <div class="spec-box">
+                        <div class="spec-label">Capacidad</div>
+                        <div class="spec-value" id="sd-cap">40 Estudiantes</div>
+                    </div>
+                    <div class="spec-box">
+                        <div class="spec-label">Piso</div>
+                        <div class="spec-value" id="sd-floor">Piso 1</div>
+                    </div>
+                    <div class="spec-box">
+                        <div class="spec-label">Tipo</div>
+                        <div class="spec-value" id="sd-type">Teoría</div>
+                    </div>
+                    <div class="spec-box">
+                        <div class="spec-label">Estado</div>
+                        <div class="spec-value" id="sd-status" style="color:var(--cyan)">Disponible</div>
+                    </div>
+                </div>
+                <div class="salon-amenities" id="sd-amenities">
+                    <span class="amenity">Proyector 4K</span>
+                    <span class="amenity">WiFi 6</span>
+                    <span class="amenity">A/C</span>
+                    <span class="amenity">Tablero Digital</span>
+                    <span class="amenity">Micrófono Inalámbrico</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- EXPERIENCIAS -->
+    <section id="experiencias">
+        <div class="section-header reveal">
+            <div class="section-tag">módulo_07</div>
+            <h2 class="section-title">Experiencias <span class="accent">Estudiantiles</span></h2>
+        </div>
+
+        <div class="exp-masonry">
+
+            <div class="exp-card reveal">
+                <div class="exp-avatar">JR</div>
+                <div class="exp-quote">
+                    Entrar a Ingeniería de Sistemas de la UFPS fue el mejor decision de mi vida. Los laboratorios están
+                    al nivel de universidades privadas y los docentes realmente se preocupan por que aprendas, no solo
+                    por dictar clase. Participar en el semillero SIRIUS me abrió las puertas para mi primera pasantía en
+                    Bogotá antes de terminar quinto semestre.
+                </div>
+                <div class="exp-author">JUAN RODRÍGUEZ</div>
+                <div class="exp-semester">7° Semestre · Énfasis IA</div>
+            </div>
+
+            <div class="exp-card reveal">
+                <div class="exp-avatar">AM</div>
+                <div class="exp-quote">
+                    El HackUFPS 2024 fue una experiencia que me formó más que muchas materias. En 48 horas construimos
+                    un sistema real con mi equipo, y eso no tiene precio.
+                </div>
+                <div class="exp-author">ANDRÉS MONTAÑO</div>
+                <div class="exp-semester">5° Semestre · Web Dev</div>
+            </div>
+
+            <div class="exp-card reveal">
+                <div class="exp-avatar">LP</div>
+                <div class="exp-quote">
+                    Como mujer en ingeniería, encontré en la UFPS un ambiente muy inclusivo. El semillero WEBDEV me dio
+                    confianza y herramientas para liderar proyectos desde segundo año.
+                </div>
+                <div class="exp-author">LAURA PÉREZ</div>
+                <div class="exp-semester">6° Semestre · Frontend</div>
+            </div>
+
+            <div class="exp-card reveal">
+                <div class="exp-avatar">CV</div>
+                <div class="exp-quote">
+                    Mi proyecto de grado sobre monitoreo de calidad del aire fue seleccionado para representar a la
+                    universidad en un congreso internacional. Eso solo es posible en una carrera con el respaldo
+                    investigativo que tiene Sistemas en la UFPS. Los docentes son investigadores activos y eso se nota
+                    en la calidad de los proyectos.
+                </div>
+                <div class="exp-author">CARLOS VARGAS</div>
+                <div class="exp-semester">Egresado 2024 · Smart Cities</div>
+            </div>
+
+            <div class="exp-card reveal">
+                <div class="exp-avatar">DM</div>
+                <div class="exp-quote">
+                    El laboratorio de ciberseguridad es impresionante. Practicamos con herramientas reales en un entorno
+                    controlado. Ningún tutorial de YouTube reemplaza eso.
+                </div>
+                <div class="exp-author">DIEGO MARTÍNEZ</div>
+                <div class="exp-semester">8° Semestre · Ciberseg.</div>
+            </div>
+
+        </div>
+    </section>
+
+
+
+    <!-- FOOTER -->
+    <footer>
+        <div>
+            <div class="footer-brand">UFPS · Ing. de Sistemas</div>
+            <p class="footer-sub">
+                Universidad Francisco de Paula Santander<br>
+                Av. Gran Colombia No. 12E-96<br>
+                Cúcuta, Norte de Santander · Colombia
+            </p>
+        </div>
+        <div>
+            <div class="footer-title">// ENLACES RÁPIDOS</div>
+            <ul class="footer-links">
+                <li><a href="https://ww2.ufps.edu.co/oferta-academica/ingenieria-de-sistemas" target="_blank">Programa
+                        Oficial</a></li>
+                <li><a href="https://uvirtual.cloud.ufps.edu.co" target="_blank">Aula Virtual</a></li>
+                <li><a href="#laboratorios">Laboratorios</a></li>
+                <li><a href="#semilleros">Semilleros</a></li>
+                <li><a href="#proyectos">Proyectos</a></li>
+            </ul>
+        </div>
+        <div>
+            <div class="footer-title">// CONTACTO</div>
+            <ul class="footer-links">
+                <li><a href="#">Secretaría Académica</a></li>
+                <li><a href="#">Coordinación del Programa</a></li>
+                <li><a href="#">Bienestar Universitario</a></li>
+                <li><a href="#">Prácticas Empresariales</a></li>
+            </ul>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2025 UFPS · INGENIERÍA DE SISTEMAS</span>
+            <span>CAMPUS VIRTUAL v1.0 · TODOS LOS DERECHOS RESERVADOS</span>
+        </div>
+    </footer>
+
+    <script>
+        // ─── CAMPUS EXPLORER ───
+        function showPanel(id) {
+            document.querySelectorAll('.campus-panel').forEach(p => { p.classList.remove('active'); p.style.display = 'none'; });
+            document.querySelectorAll('.campus-btn').forEach(b => b.classList.remove('active'));
+            const panel = document.getElementById('panel-' + id);
+            if (panel) { panel.style.display = 'flex'; setTimeout(() => panel.classList.add('active'), 10); }
+            event.currentTarget.classList.add('active');
+        }
+
+        // ─── SALONES ───
+        const salonData = {
+            S101: { name: 'Salón 101 — Bloque A', cap: '40 Estudiantes', floor: 'Piso 1', type: 'Teoría', status: 'Disponible', amenities: ['Proyector 4K', 'WiFi 6', 'A/C', 'Tablero Digital', 'Micrófono'] },
+            S102: { name: 'Salón 102 — Bloque A', cap: '35 Estudiantes', floor: 'Piso 1', type: 'Teoría', status: 'En uso', amenities: ['Proyector 4K', 'WiFi 6', 'A/C', 'Tablero Blanco'] },
+            S201: { name: 'Salón 201 — Bloque B', cap: '25 Estudiantes', floor: 'Piso 2', type: 'Seminario', status: 'Disponible', amenities: ['Pantalla LED', 'WiFi 6', 'A/C', 'Sillas Modulares'] },
+            S202: { name: 'Salón 202 — Bloque B', cap: '25 Estudiantes', floor: 'Piso 2', type: 'Seminario', status: 'Disponible', amenities: ['Pantalla LED', 'WiFi 6', 'A/C'] },
+            AUD: { name: 'Auditorio Principal', cap: '200 Personas', floor: 'Planta Baja', type: 'Eventos', status: 'Disponible', amenities: ['Escenario', 'PA System', 'Iluminación Escénica', 'Transmisión en Vivo', 'Proyección Doble'] },
+            SAL: { name: 'Sala de Profesores', cap: 'Acceso Docentes', floor: 'Piso 3', type: 'Docentes', status: 'Privado', amenities: ['Impresora', 'WiFi 6', 'Cafetera', 'Casilleros'] },
+        };
+
+        function selectSalon(el, id) {
+            document.querySelectorAll('.salon-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            const d = salonData[id];
+            document.getElementById('sd-name').textContent = d.name;
+            document.getElementById('sd-cap').textContent = d.cap;
+            document.getElementById('sd-floor').textContent = d.floor;
+            document.getElementById('sd-type').textContent = d.type;
+            const st = document.getElementById('sd-status');
+            st.textContent = d.status;
+            st.style.color = d.status === 'Disponible' ? 'var(--cyan)' : d.status === 'En uso' ? 'var(--accent)' : 'var(--text-dim)';
+            const am = document.getElementById('sd-amenities');
+            am.innerHTML = d.amenities.map(a => `<span class="amenity">${a}</span>`).join('');
+        }
+
+        // ─── REVEAL ON SCROLL ───
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); } });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+        // Init panel display fix
+        document.querySelectorAll('.campus-panel').forEach(p => { if (!p.classList.contains('active')) p.style.display = 'none'; });
+        document.querySelector('#panel-labs').style.display = 'flex';
+    </script>
+</body>
+
+</html>
